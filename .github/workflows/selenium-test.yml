@@ -1,13 +1,11 @@
 name: Node.js CI con Selenium
 
-# Define cuándo se ejecutará el flujo de trabajo.
 on:
   push:
-    branches: [ main ]  # Ejecutar en cada push a la rama main
+    branches: [ main ]
   pull_request:
-    branches: [ main ] # Ejecutar en cada pull request a la rama main
+    branches: [ main ]
 
-# Define un trabajo llamado 'build' que se ejecutará en un entorno 'ubuntu-latest'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,12 +25,16 @@ jobs:
     - name: Instalar dependencias
       run: npm install
 
-    # Paso 4: Instalar Google Chrome y dependencias adicionales
-    - name: Instalar Google Chrome y Xvfb para entorno sin interfaz
+    # Paso 4: Instalar Google Chrome y Xvfb para entorno sin interfaz
+    - name: Instalar Google Chrome y Xvfb
       run: |
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable xvfb
 
-    # Paso 5: Ejecutar las pruebas de regresión en un entorno virtual sin interfaz
+    # Paso 5: Dar permisos de ejecución a Mocha
+    - name: Asignar permisos de ejecución a Mocha
+      run: chmod +x ./node_modules/.bin/mocha
+
+    # Paso 6: Ejecutar las pruebas de regresión con Selenium
     - name: Ejecutar pruebas de regresión con Selenium
       run: xvfb-run --auto-servernum npm test
